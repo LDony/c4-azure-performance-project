@@ -103,14 +103,13 @@ def index():
 
         # Get current values
         vote1 = r.get(button1).decode('utf-8')
+         # TODO: use tracer object to trace cat vote
         with tracer.span(name="Cats Vote") as span:
-            span.add_annotation("Span - Cat Vote")
-            print("Get Cat")
+            print("Cats Vote")
 
         vote2 = r.get(button2).decode('utf-8')
         with tracer.span(name="Dogs Vote") as span:
-            span.add_annotation("Span - Dog Vote")
-            print("Get Dog")
+            print("Dogs Vote")
 
         # Return index with values
         return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
@@ -123,11 +122,15 @@ def index():
             r.set(button1,0)
             r.set(button2,0)
 
-            logger.info('Reset')
-            print("Reset")
-
             vote1 = r.get(button1).decode('utf-8')
+            properties = {'custom_dimensions': {'Cats Vote': vote1}}
+            # TODO: use logger object to log cat vote
+            logger.info('Cats Vote', extra=properties)
+
             vote2 = r.get(button2).decode('utf-8')
+            properties = {'custom_dimensions': {'Dogs Vote': vote2}}
+            # TODO: use logger object to log dog vote
+            logger.info('Dogs Vote', extra=properties)
 
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
 
@@ -140,13 +143,13 @@ def index():
             # Get current values
             vote1 = r.get(button1).decode('utf-8')
             properties = {'custom_dimensions': {'Cats Vote': vote1}}
+            # TODO: use logger object to log cat vote
             logger.info('Cats Vote', extra=properties)
-            print("Vote Cat")
 
             vote2 = r.get(button2).decode('utf-8')
             properties = {'custom_dimensions': {'Dogs Vote': vote2}}
-            logger.info('Dogs Vote', extra=properties)
-            print("Vote Dog")
+            # TODO: use logger object to log dog vote
+            logger.info('Dogs Vote', extra=properties)  
 
             # Return results
             return render_template("index.html", value1=int(vote1), value2=int(vote2), button1=button1, button2=button2, title=title)
